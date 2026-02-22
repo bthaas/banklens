@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankLens Results</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2933;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 16px 30px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin: 0 0 18px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #d9e2ec;
+            border-radius: 8px;
+            padding: 14px;
+        }
+
+        .card .label {
+            font-size: 13px;
+            color: #52606d;
+            margin-bottom: 6px;
+        }
+
+        .card .value {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border: 1px solid #d9e2ec;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #e4e7eb;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f0f4f8;
+        }
+
+        .amount {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .breakdown {
+            background: white;
+            border: 1px solid #d9e2ec;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+
+        .breakdown h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .breakdown-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e4e7eb;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        a {
+            color: #2f6fed;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Results</h1>
+
+        <div class="summary-grid">
+            <div class="card">
+                <div class="label">Total Spent</div>
+                <div class="value">${{ '%.2f'|format(total_spent) }}</div>
+            </div>
+            <div class="card">
+                <div class="label">Number of Transactions</div>
+                <div class="value">{{ transaction_count }}</div>
+            </div>
+            <div class="card">
+                <div class="label">Biggest Single Expense</div>
+                <div class="value">${{ '%.2f'|format(biggest_expense) }}</div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                <tr>
+                    <td>{{ tx.date }}</td>
+                    <td>{{ tx.description }}</td>
+                    <td class="amount">${{ '%.2f'|format(tx.amount) }}</td>
+                    <td>{{ tx.category }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="breakdown">
+            <h2>Category Breakdown</h2>
+            <ul class="breakdown-list">
+                {% for category, total in category_totals.items() %}
+                <li class="breakdown-item">
+                    <span>{{ category }}</span>
+                    <span>${{ '%.2f'|format(total) }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <a href="{{ url_for('index') }}">Upload another file</a>
+    </div>
+</body>
+</html>
