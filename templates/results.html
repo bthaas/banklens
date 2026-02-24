@@ -123,6 +123,10 @@
                 <div class="value">${{ '%.2f'|format(total_spent) }}</div>
             </div>
             <div class="card">
+                <div class="label">Total Income</div>
+                <div class="value">${{ '%.2f'|format(total_income) }}</div>
+            </div>
+            <div class="card">
                 <div class="label">Number of Transactions</div>
                 <div class="value">{{ transaction_count }}</div>
             </div>
@@ -154,7 +158,7 @@
         </table>
 
         <div class="breakdown">
-            <h2>Category Breakdown</h2>
+            <h2>Category Breakdown (Expenses Only)</h2>
             <ul class="breakdown-list">
                 {% for category, total in category_totals.items() %}
                 <li class="breakdown-item">

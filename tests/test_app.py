@@ -110,3 +110,20 @@ def test_upload_handles_openai_failure(client):
 
     assert response.status_code == 302
     assert "API+down" in response.location
+
+
+def test_compute_summary_logic():
+    """Verify that compute_summary correctly separates income and expenses."""
+    transactions = [
+        {"amount": -10.0, "category": "Food"},
+        {"amount": -20.0, "category": "Transport"},
+        {"amount": 100.0, "category": "Salary"},  # Income
+    ]
+    summary = app_module.compute_summary(transactions)
+
+    assert summary["total_spent"] == 30.0  # abs(-10 + -20)
+    assert summary["total_income"] == 100.0
+    assert summary["biggest_expense"] == 20.0
+    assert summary["category_totals"]["Food"] == 10.0
+    assert summary["category_totals"]["Transport"] == 20.0
+    assert "Salary" not in summary["category_totals"]  # Income not in spending breakdown
